@@ -7,4 +7,4 @@ from contacts.models import Contact
 class ContactAdmin(admin.ModelAdmin):
     list_display = ("id", "first_name", "last_name", "phone_number", "email", "created_at",)
     list_display_links = ("id",)
-    ordering = ("pk",)
+    ordering = ("pk", )
