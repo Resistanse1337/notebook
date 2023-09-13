@@ -1,4 +1,3 @@
-from django.db import transaction
 from django.contrib.auth.password_validation import validate_password
 from django.template.loader import render_to_string
 from rest_framework import serializers
@@ -10,7 +9,9 @@ from users.models import User
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150, required=True)
-    password = serializers.CharField(max_length=255, required=True, write_only=True)
+    password = serializers.CharField(
+        max_length=255, required=True, write_only=True
+    )
 
 
 class RegisterSerializer(serializers.ModelSerializer):
