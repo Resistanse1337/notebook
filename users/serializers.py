@@ -32,7 +32,9 @@ class RegisterSerializer(serializers.ModelSerializer):
                 "required": True,
                 "validators": [UniqueValidator(queryset=User.objects.all())],
             },
-            "password": {"write_only": True, "validators": [validate_password]},
+            "password": {
+                "write_only": True, "validators": [validate_password]
+            },
         }
 
     def validate(self, data):
