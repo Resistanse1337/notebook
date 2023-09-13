@@ -272,14 +272,11 @@ tags
 
 .pytest_cache/
 .ipython/
-.env
+# .env
 # .env.django
 # .env.postgres
-.env
-!.envs/.production/
-.envs/.production/*
-!.envs/.production/*.example
-!.envs/.local/
+/.env/*
+!.env/*.example
 
 .vscode
 db.sqlite*

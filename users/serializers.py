@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.contrib.auth.password_validation import validate_password
+from django.template.loader import render_to_string
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
@@ -40,15 +41,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
     def create(self, validated_data):
-        with transaction.atomic():
-            user = User.objects.create(
-                first_name=validated_data["first_name"],
-                last_name=validated_data["last_name"],
-                username=validated_data["username"],
-                email=validated_data["email"],
-            )
+        user = User.create_user(validated_data)
 
-            user.set_password(validated_data["password"])
-            user.save()
-
-            return user
+        text = render_to_string(
+            "email/after_register.html",
+            {"username": user.username}
+        )
+        user.send_mail("Message from notebook service", text)
+        
+        return user

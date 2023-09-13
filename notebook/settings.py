@@ -13,15 +13,19 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env', '.env.dev'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "SECRET_KEY")
+SECRET_KEY = env.str("SECRET_KEY", "SECRET_KEY") # type: ignore
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -64,7 +68,7 @@ ROOT_URLCONF = 'notebook.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [str(BASE_DIR / "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,12 +89,12 @@ WSGI_APPLICATION = 'notebook.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+        "ENGINE": env.str("SQL_ENGINE", "django.db.backends.sqlite3"), # type: ignore
+        "NAME": env.str("SQL_DATABASE", BASE_DIR / "db.sqlite3"), # type: ignore
+        "USER": env.str("SQL_USER", "user"), # type: ignore
+        "PASSWORD": env.str("SQL_PASSWORD", "password"), # type: ignore
+        "HOST": env.str("SQL_HOST", "localhost"), # type: ignore
+        "PORT": env.str("SQL_PORT", "5432"), # type: ignore
     }
 }
 
@@ -182,3 +186,20 @@ SPECTACULAR_SETTINGS = {
         "drf_standardized_errors.openapi_hooks.postprocess_schema_enums"
     ],
 }
+
+
+CELERY_BROKER_URL = env.str("CELERY_BROKER_URL", "amqp://guest:guest@rabbitmq:5672//") # type: ignore
+CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND", "rpc://guest:guest@rabbitmq:5672//")  # type: ignore
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST", "")  # type: ignore
+EMAIL_PORT = env.int("EMAIL_PORT", 0)  # type: ignore
+EMAIL_USE_SSL = True
+
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", "")  # type: ignore
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", "")  # type: ignore
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER

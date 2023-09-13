@@ -1,1 +1,1 @@
-poetry export -f requirements.txt --output requirements.txt --without-hashes
+poetry export -f requirements.txt --output ./.dockerfiles/requirements.txt --without-hashes
