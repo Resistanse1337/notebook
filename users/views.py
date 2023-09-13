@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.middleware.csrf import get_token
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.middleware.csrf import get_token
-from drf_yasg.utils import swagger_auto_schema
 
 from errors.api_errors import InvalidCredentials, UserLoginError
 from users.models import User
@@ -24,7 +24,9 @@ class LoginView(APIView):
 
         data: dict = serializer.validated_data  # type: ignore
 
-        user = authenticate(request, username=data["username"], password=data["password"])
+        user = authenticate(
+            request, username=data["username"], password=data["password"]
+        )
 
         if user is None:
             raise InvalidCredentials

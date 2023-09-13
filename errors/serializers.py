@@ -1,7 +1,8 @@
 from rest_framework import serializers, status
 from rest_framework.exceptions import APIException
 
-from .api_errors import BaseAPIError, InvalidCredentials, PasswordsDoesNotMatch, UserLoginError
+from .api_errors import (BaseAPIError, InvalidCredentials,
+                         PasswordsDoesNotMatch, UserLoginError)
 
 
 def get_error_enum_and_response_serializer(

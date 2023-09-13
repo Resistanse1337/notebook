@@ -1,8 +1,9 @@
-from django.db import transaction
 from django.contrib.auth.models import AbstractUser
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from common.models import LifetimeModel
+
 from .tasks import send_mail
 
 
