@@ -51,5 +51,5 @@ class RegisterSerializer(serializers.ModelSerializer):
             {"username": user.username}
         )
         user.send_mail("Message from notebook service", text)
-        
+
         return user
