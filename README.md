@@ -7,7 +7,7 @@ docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser  
 
 # Get permissions to run tests
-docker-compose exec db psql postgresql://pguser:pgpass@db:5432/pgdb
+docker-compose exec db psql postgresql://pguser:pgpass@db:5432/pgdb  
 ALTER USER pguser CREATEDB;
 
 # Run tests
