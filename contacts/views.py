@@ -2,6 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 from common.pagination import Pagination
 from contacts.models import Contact
@@ -12,17 +13,11 @@ class ContactView(ModelViewSet):
     serializer_class = ContactSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = Pagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['first_name', 'last_name']
     
     def get_queryset(self):
-        query = Contact.objects.filter(user=self.request.user)
-
-        if first_name := self.request.query_params.get("first_name"):
-            query = query.filter(first_name__icontains=first_name)
-        
-        if last_name := self.request.query_params.get("last_name"):
-            query = query.filter(last_name__icontains=last_name)
-
-        return query
+        return Contact.objects.filter(user=self.request.user)
 
     @extend_schema(parameters=[ContactFiltersSerializer])
     def list(self, request: Request, *args, **kwargs):
